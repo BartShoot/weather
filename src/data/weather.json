@@ -1,0 +1,7 @@
+{
+    "location": "Sample City",
+    "temperature": "10°C",
+    "condition": "Sunny",
+    "humidity": "60%",
+    "windSpeed": "10 km/h"
+}
