@@ -10,5 +10,7 @@
 # Usage
 
 `bun fetchWeather.ts`
+
 `bun run build`
+
 `cd dist && serve`
