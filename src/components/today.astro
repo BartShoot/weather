@@ -2,7 +2,7 @@
    import weatherData from '../data/weather.json';
 ---
 
-<div class="weather-widget">
+<div class="border-gray-400 border-2 p-4 max-w-sm mx-auto mt-4 rounded-xl">
   <h2>Weather for Today</h2>
   <p><strong>Location:</strong> {weatherData.location}</p>
   <p><strong>Temperature:</strong> {weatherData.temperature}</p>
@@ -10,16 +10,3 @@
   <p><strong>Humidity:</strong> {weatherData.humidity}</p>
   <p><strong>Wind Speed:</strong> {weatherData.windSpeed}</p>
 </div>
-
-<style>
-  .weather-widget {
-    border: 1px solid #ccc;
-    padding: 16px;
-    border-radius: 8px;
-    max-width: 300px;
-    background-color: #f9f9f9;
-  }
-  .weather-widget h2 {
-    margin-top: 0;
-  }
-</style>
