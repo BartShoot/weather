@@ -6,21 +6,6 @@
   delay: 1440
   fail_on_prepare_env_warning: true
   actions:
-  - action: bun run build
-    type: BUILD
-    docker_image_name: buddy/localshell
-    docker_image_tag: ubuntu_24.04
-    execute_commands:
-    - . ~/.bashrc
-    - bun i
-    - bun run build
-    setup_commands:
-    - apt-get update
-    - 'apt-get install unzip '
-    - curl -fsSL https://bun.sh/install | bash
-    - exec bash
-    - . ~/.bashrc
-    shell: BASH
   - action: Transfer to droplet1
     type: DIGITAL_OCEAN
     disabled: true
