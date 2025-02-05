@@ -19,6 +19,7 @@
     shell: BASH
   - action: Transfer to droplet1
     type: DIGITAL_OCEAN
+    disabled: true
     input_type: BUILD_ARTIFACTS
     local_path: /dist
     remote_path: /root/projects/weather
