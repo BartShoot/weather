@@ -6,6 +6,17 @@
   delay: 1440
   fail_on_prepare_env_warning: true
   actions:
+  - action: npm test
+    type: BUILD
+    docker_image_name: library/node
+    docker_image_tag: 22
+    execute_commands:
+    - "# yarn install"
+    - npm install
+    - npm test
+    setup_commands:
+    - npm install -g bun
+    shell: BASH
   - action: Transfer to droplet1
     type: DIGITAL_OCEAN
     disabled: true
