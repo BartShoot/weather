@@ -15,7 +15,8 @@
     - bun i
     - bun run build
     setup_commands:
-    - 'apt install unzip '
+    - apt-get update
+    - 'apt-get install unzip '
     - curl -fsSL https://bun.sh/install | bash
     shell: BASH
   - action: Transfer to droplet1
