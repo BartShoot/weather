@@ -1,5 +1,5 @@
 import { fetchWeatherApi } from 'openmeteo';
-	
+
 const params = {
 	"latitude": 49.8225,
 	"longitude": 19.0469,
@@ -43,17 +43,17 @@ const weatherData = {
 
 };
 
-Bun.write("weather.json", JSON.stringify(weatherData))
-// `weatherData` now contains a simple structure with arrays for datetime and weather data
-for (let i = 0; i < weatherData.hourly.time.length; i++) {
-	console.log(
-		weatherData.hourly.time[i].toISOString(),
-		weatherData.hourly.temperature2m[i],
-		weatherData.hourly.relativeHumidity2m[i],
-		weatherData.hourly.apparentTemperature[i],
-		weatherData.hourly.precipitation[i],
-		weatherData.hourly.weatherCode[i],
-		weatherData.hourly.windSpeed10m[i]
-	);
-}
+const mappedData = {
+	hourlyForecasts: weatherData.hourly.time.map((time, index) => ({
+		time: time,
+		temperature2m: weatherData.hourly.temperature2m[index],
+		relativeHumidity2m: weatherData.hourly.relativeHumidity2m[index],
+		apparentTemperature: weatherData.hourly.apparentTemperature[index],
+		precipitation: weatherData.hourly.precipitation[index],
+		weatherCode: weatherData.hourly.weatherCode[index],
+		windSpeed10m: weatherData.hourly.windSpeed10m[index],
+	}))
+};
 
+Bun.write("weather.json", JSON.stringify(mappedData, null, "\t"))
+console.log(mappedData)
