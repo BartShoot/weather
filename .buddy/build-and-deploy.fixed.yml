@@ -12,7 +12,7 @@
     docker_image_tag: 22
     execute_commands:
     - 'bun i '
-    - 'bun build '
+    - 'bun run build '
     setup_commands:
     - npm install -g bun
     shell: BASH
