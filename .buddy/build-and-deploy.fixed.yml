@@ -18,6 +18,7 @@
     - 'apt-get install unzip '
     - curl -fsSL https://bun.sh/install | bash
     - exec bash
+    - . ~/.bashrc
     shell: BASH
   - action: Transfer to droplet1
     type: DIGITAL_OCEAN
