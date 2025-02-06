@@ -1,5 +1,5 @@
 import { Chart } from 'react-chartjs-2';
-import { Chart as ChartJS, LineController, LineElement, PointElement, LinearScale, Title, CategoryScale, Legend, Tooltip, BarElement } from 'chart.js';
+import { Chart as ChartJS, LineController, LineElement, LinearScale, Title, Legend, Tooltip, BarElement, BarController, CategoryScale, PointElement } from 'chart.js';
 import { useEffect, useState } from 'react';
 import weatherData from '../../data/weather.json'
 
@@ -8,12 +8,13 @@ export const WeatherToday = () => {
     useEffect(() => {
         ChartJS.register(
             LineController,
+            BarController,
+            PointElement,
             LineElement,
             BarElement,
-            PointElement,
             LinearScale,
-            Title,
             CategoryScale,
+            Title,
             Legend,
             Tooltip
         );
@@ -110,11 +111,11 @@ export const WeatherToday = () => {
     }
     return (
         <>
-        <p>{todaysDate.toDateString()}</p>
-        <div className='chart-container' style={{ position: 'relative' }} >
-            <Chart options={options} type='bar' data={chartData} />
-        </div>
-</>
+            <p>{todaysDate.toDateString()}</p>
+            <div className='chart-container' style={{ position: 'relative' }} >
+                <Chart options={options} type='bar' data={chartData} />
+            </div>
+        </>
     )
 }
 export default WeatherToday;
