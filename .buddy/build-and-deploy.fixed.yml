@@ -11,7 +11,8 @@
     docker_image_name: library/node
     docker_image_tag: 22
     execute_commands:
-    - 'bun i '
+    - 'bun i'
+    - 'bun fetchWeather.ts'
     - 'bun run build '
     setup_commands:
     - npm install -g bun
