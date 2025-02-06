@@ -23,7 +23,6 @@
     local_path: /dist
     remote_path: /root/projects/weather
     login: root
-    password: secure!ldW9lrcTQ5uNbG6VFBN/4Q==.MZWjBsmnM43/TPOMoZRmqg==
     host: droplet1
     server_key: secure!ldW9lrcTQ5uNbG6VFBN/4Q==.MZWjBsmnM43/TPOMoZRmqg==
     authentication_mode: PRIVATE_KEY
