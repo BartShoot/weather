@@ -1,9 +1,10 @@
 ---
-import weatherData from '../../data/weather.json';
-import WeatherToday from './WeatherToday.tsx'
+import weatherData from "../../data/weather.json";
+import WeatherChart from "./WeatherChart.tsx";
+import WeatherToday from "./WeatherToday.tsx";
 ---
 
-<div class="border-gray-400 border-2 p-4 max-w-auto m-8 rounded-xl">
-  <h2>Weather for Today</h2>
+<div class="p-4 max-w-auto m-6 rounded-xl">
   <WeatherToday client:load />
+  <WeatherChart client:only="react" />
 </div>

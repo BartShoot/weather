@@ -1,29 +1,29 @@
 - pipeline: build and deploy
   on: SCHEDULE
   refs:
-  - refs/heads/main
+    - refs/heads/main
   start_date: 2025-02-05T07:00:00Z
   delay: 1440
   fail_on_prepare_env_warning: true
   actions:
-  - action: npm test
-    type: BUILD
-    docker_image_name: library/node
-    docker_image_tag: 22
-    execute_commands:
-    - 'bun i'
-    - 'bun fetchWeather.ts'
-    - 'bun run build '
-    setup_commands:
-    - npm install -g bun
-    shell: BASH
-  - action: Transfer to droplet1
-    type: DIGITAL_OCEAN
-    input_type: BUILD_ARTIFACTS
-    local_path: /dist
-    remote_path: /root/projects/weather
-    login: root
-    host: droplet1
-    server_key: secure!ldW9lrcTQ5uNbG6VFBN/4Q==.MZWjBsmnM43/TPOMoZRmqg==
-    authentication_mode: PRIVATE_KEY
-    integration: DigitalOceanWs
+    - action: npm test
+      type: BUILD
+      docker_image_name: library/node
+      docker_image_tag: 22
+      execute_commands:
+        - "bun i"
+        - "bun fetchWeather.ts"
+        - "bun run build "
+      setup_commands:
+        - npm install -g bun
+      shell: BASH
+    - action: Transfer to droplet1
+      type: DIGITAL_OCEAN
+      input_type: BUILD_ARTIFACTS
+      local_path: /dist
+      remote_path: /root/projects/weather
+      login: root
+      host: droplet1
+      server_key: secure!ldW9lrcTQ5uNbG6VFBN/4Q==.MZWjBsmnM43/TPOMoZRmqg==
+      authentication_mode: PRIVATE_KEY
+      integration: DigitalOceanWs

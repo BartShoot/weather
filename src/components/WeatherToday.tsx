@@ -1,121 +1,132 @@
-import { Chart } from 'react-chartjs-2';
-import { Chart as ChartJS, LineController, LineElement, LinearScale, Title, Legend, Tooltip, BarElement, BarController, CategoryScale, PointElement } from 'chart.js';
-import { useEffect, useState } from 'react';
-import weatherData from '../../data/weather.json'
+import { useEffect, useState } from "react";
+import weatherData from "../../data/weather.json";
 
 export const WeatherToday = () => {
-    const [isRegistered, setIsRegistered] = useState(false);
-    useEffect(() => {
-        ChartJS.register(
-            LineController,
-            BarController,
-            PointElement,
-            LineElement,
-            BarElement,
-            LinearScale,
-            CategoryScale,
-            Title,
-            Legend,
-            Tooltip
-        );
-        setIsRegistered(true);
-    }, [])
+  const [currentWeatherData, setCurrentWeatherData] = useState<{
+    temperature: number;
+    apparentTemperature: number;
+    precipitation: number;
+    time: string;
+    displayTime: string;
+  } | null>(null);
 
-    if (!isRegistered) return <></>
+  useEffect(() => {
+    // Get current date and time
+    const now = new Date();
 
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top' as const
-            },
-            title: {
-                display: true,
-                text: 'Hourly weather'
-            }
-        },
-        scales: {
-            y: {
-                type: 'linear',
-                position: 'left',
-                title: {
-                    display: true,
-                    text: '°C'
-                }
-            },
-            y1: {
-                type: 'linear',
-                position: 'right',
-                title: {
-                    display: true,
-                    text: 'mm'
-                },
-                min: 0,
-                max: 20,
-                grid: {
-                    drawOnChartArea: false
-                }
-            }
-        }
+    // Find the closest hour in the weather data
+    const hourIndex = findClosestHourIndex(now);
+
+    if (hourIndex !== -1) {
+      setCurrentWeatherData({
+        temperature: weatherData.hourly.temperature2m[hourIndex],
+        apparentTemperature: weatherData.hourly.apparentTemperature[hourIndex],
+        precipitation: weatherData.hourly.precipitation[hourIndex],
+        time: weatherData.hourly.time[hourIndex],
+        displayTime: new Date().toLocaleString(),
+      });
     }
+  }, []);
 
-    const todaysDate = new Date();
-    const labels = weatherData.hourly.time.map((date: string) => {
-        const dateObj = new Date(date)
-        switch (dateObj.getDay() - todaysDate.getDay()) {
-            case -1:
-                return `Yesterday ${dateObj.getHours()}:00`
-            case 0:
-                return `Today ${dateObj.getHours()}:00`
-            case 1:
-                return `Tommorow ${dateObj.getHours()}:00`
-            default:
-                return `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}.${dateObj.getDay()} ${dateObj.getHours()}:00`
-        }
+  // Function to find the closest hour in the data
+  const findClosestHourIndex = (currentDate: Date): number => {
+    const currentTime = currentDate.getTime();
+
+    let closestIndex = -1;
+    let smallestDiff = Number.MAX_VALUE;
+
+    weatherData.hourly.time.forEach((timeString, index) => {
+      const timeDate = new Date(timeString);
+      const diff = Math.abs(timeDate.getTime() - currentTime);
+
+      if (diff < smallestDiff) {
+        smallestDiff = diff;
+        closestIndex = index;
+      }
     });
-    const chartData = {
-        labels: labels,
-        yLabel: 'C',
-        color: function (context) {
-            const index = context.dataIndex;
-            const value = context.dataset.data[index];
-            return value < 0 ? 'blue' :
-                value > 10 ? 'green' :
-                    value > 20 ? 'orange' : 'white'
-        },
-        datasets: [
-            {
-                type: 'line' as const,
-                label: 'Temperature',
-                data: weatherData.hourly.temperature2m,
-                backgroundColor: 'rgb(150, 70, 120)',
-                yAxisID: 'y'
-            },
-            {
-                type: 'line' as const,
-                label: 'Apparent Temperature',
-                data: weatherData.hourly.apparentTemperature,
-                backgroundColor: 'rgb(50, 170, 30)',
-                borderColor: 'rgba(128,129,130,0.5)',
-                yAxisID: 'y'
-            },
-            {
-                type: 'bar' as const,
-                label: 'Precipation',
-                data: weatherData.hourly.precipitation,
-                backgroyndColor: 'rbg(100,100,250)',
-                yAxisID: 'y1'
-            }
-        ],
 
+    return closestIndex;
+  };
+
+  const getWeatherCondition = (): string => {
+    if (!currentWeatherData) return "";
+
+    if (currentWeatherData.precipitation > 5) {
+      return "Heavy Rain";
+    } else if (currentWeatherData.precipitation > 1) {
+      return "Light Rain";
+    } else if (currentWeatherData.temperature < 0) {
+      return "Freezing";
+    } else if (currentWeatherData.temperature > 25) {
+      return "Hot";
+    } else if (currentWeatherData.temperature > 15) {
+      return "Warm";
+    } else {
+      return "Cool";
     }
+  };
+
+  const getTemperatureColor = (temp: number): string => {
+    if (temp < 0) return "text-blue-500";
+    if (temp > 20) return "text-orange-500";
+    if (temp > 10) return "text-green-500";
+    return "text-gray-800";
+  };
+
+  if (!currentWeatherData) {
     return (
-        <>
-            <p>{todaysDate.toDateString()}</p>
-            <div className='chart-container' style={{ position: 'relative' }} >
-                <Chart options={options} type='bar' data={chartData} />
+      <div className="rounded bg-gray-100 p-4">Loading weather data...</div>
+    );
+  }
+
+  return (
+    <div className="m-6 max-w-md rounded-lg bg-gray-100 p-6 shadow-md">
+      <h2 className="mb-4 text-2xl font-bold">
+        Current Weather in Bielsko-Biała
+      </h2>
+
+      <div className="mb-4">
+        <p className="text-gray-600">{currentWeatherData.displayTime}</p>
+        <p className="text-lg font-medium">{getWeatherCondition()}</p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="rounded bg-white p-4 shadow">
+          <p className="text-sm text-gray-500">Temperature</p>
+          <p
+            className={`text-2xl font-bold ${getTemperatureColor(currentWeatherData.temperature)}`}
+          >
+            {currentWeatherData.temperature.toFixed(1)}°C
+          </p>
+        </div>
+
+        <div className="rounded bg-white p-4 shadow">
+          <p className="text-sm text-gray-500">Feels Like</p>
+          <p
+            className={`text-2xl font-bold ${getTemperatureColor(currentWeatherData.apparentTemperature)}`}
+          >
+            {currentWeatherData.apparentTemperature.toFixed(1)}°C
+          </p>
+        </div>
+
+        <div className="col-span-2 rounded bg-white p-4 shadow">
+          <p className="text-sm text-gray-500">Precipitation</p>
+          <p className="text-2xl font-bold text-blue-500">
+            {currentWeatherData.precipitation.toFixed(1)} mm
+          </p>
+          {currentWeatherData.precipitation > 0 && (
+            <div className="mt-2 h-2.5 w-full rounded-full bg-gray-200">
+              <div
+                className="h-2.5 rounded-full bg-blue-500"
+                style={{
+                  width: `${Math.min(currentWeatherData.precipitation * 5, 100)}%`,
+                }}
+              ></div>
             </div>
-        </>
-    )
-}
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 export default WeatherToday;
